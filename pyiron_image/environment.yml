@@ -1,0 +1,4 @@
+channels:
+- conda-forge
+dependencies:
+- psycopg2 =2.9.1

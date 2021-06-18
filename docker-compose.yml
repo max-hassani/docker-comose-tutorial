@@ -1,0 +1,32 @@
+# docker-compose.yml
+version: '3'
+services:
+  db_pyiron:
+    image: "postgres" # use latest official postgres version
+    env_file:
+      - database.env # configure postgres
+    volumes:
+      - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+    ports:
+      - "54320:5432"
+    networks:
+      - internal
+
+  pyiron_container:
+    depends_on: 
+      - db_pyiron
+    build: ./pyiron_image/
+    restart: always
+    networks:
+      - internal
+    volumes: 
+      - pyiron_db_tests:/home/pyiron/
+    ports:
+      - "8888:8888"
+volumes:
+    database-data:
+      driver: local
+    pyiron_db_tests:
+      driver: local
+networks: 
+    internal: 
